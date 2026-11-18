@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FUZZY PROXY - MOD MENU</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #030508;
+      --card-bg: rgba(10, 16, 28, 0.85);
+      --neon-blue: #00e5ff;
+      --neon-blue-dark: #0077ff;
+      --neon-glow: 0 0 15px rgba(0, 229, 255, 0.5), 0 0 30px rgba(0, 119, 255, 0.3);
+      --neon-glow-strong: 0 0 20px rgba(0, 229, 255, 0.85), 0 0 40px rgba(0, 119, 255, 0.6);
+      --danger: #ff2a5f;
+      --success: #00ff9d;
+      --text-main: #e6f4ff;
+      --text-muted: #7a94b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      overflow-x: hidden;
+      background-image:
+        radial-gradient(circle at 50% 0%, rgba(0, 119, 255, 0.15) 0%, transparent 60%),
+        linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+      background-size: 100% 100%, 30px 30px, 30px 30px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 440px;
+      background: var(--card-bg);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      border-radius: 20px;
+      padding: 32px 24px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 229, 255, 0.05);
+      backdrop-filter: blur(12px);
+      position: relative;
+      overflow: hidden;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+      box-shadow: var(--neon-glow);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+
+    .shake {
+      animation: shake 0.35s ease-in-out;
+    }
+
+    /* Header / Logo */
+    .header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.85rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: #fff;
+      text-shadow: 0 0 10px rgba(0, 229, 255, 0.8), 0 0 25px rgba(0, 119, 255, 0.6);
+    }
+
+    .subtitle {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 5px;
+      color: var(--neon-blue);
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      padding: 4px 12px;
+      border-radius: 50px;
+      background: rgba(0, 229, 255, 0.08);
+      border: 1px solid rgba(0, 229, 255, 0.25);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--neon-blue);
+      letter-spacing: 1px;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--neon-blue);
+      box-shadow: 0 0 8px var(--neon-blue);
+      animation: pulse 1.6s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    /* Form Elements */
+    .input-group {
+      position: relative;
+      margin-bottom: 18px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    input[type="password"],
+    input[type="text"] {
+      width: 100%;
+      background: rgba(4, 8, 16, 0.9);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      border-radius: 12px;
+      padding: 14px 44px 14px 16px;
+      color: #fff;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.95rem;
+      letter-spacing: 1.5px;
+      outline: none;
+      transition: all 0.25s ease;
+    }
+
+    input:focus {
+      border-color: var(--neon-blue);
+      box-shadow: var(--neon-glow);
+    }
+
+    input::placeholder {
+      color: #435775;
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 1px;
+    }
+
+    .toggle-pass {
+      position: absolute;
+      right: 14px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      transition: color 0.2s;
+    }
+
+    .toggle-pass:hover {
+      color: var(--neon-blue);
+    }
+
+    /* Buttons */
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--neon-blue), var(--neon-blue-dark));
+      border: none;
+      color: #02060d;
+      box-shadow: var(--neon-glow);
+      margin-bottom: 12px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--neon-glow-strong);
+      filter: brightness(1.08);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: rgba(0, 229, 255, 0.06);
+      border: 1px solid rgba(0, 229, 255, 0.45);
+      color: var(--neon-blue);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(0, 229, 255, 0.15);
+      border-color: var(--neon-blue);
+      box-shadow: var(--neon-glow);
+    }
+
+    /* Messages */
+    .msg-box {
+      margin-top: 14px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-align: center;
+      display: none;
+      letter-spacing: 0.5px;
+    }
+
+    .msg-error {
+      display: block;
+      background: rgba(255, 42, 95, 0.12);
+      border: 1px solid rgba(255, 42, 95, 0.5);
+      color: #ff6b8f;
+      box-shadow: 0 0 15px rgba(255, 42, 95, 0.2);
+    }
+
+    .msg-success {
+      display: block;
+      background: rgba(0, 255, 157, 0.1);
+      border: 1px solid rgba(0, 255, 157, 0.45);
+      color: var(--success);
+      box-shadow: 0 0 15px rgba(0, 255, 157, 0.2);
+    }
+
+    /* Main Dashboard Panel */
+    .hidden {
+      display: none !important;
+    }
+
+    .panel-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+    }
+
+    .active-counter {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+
+    .active-counter span {
+      color: var(--neon-blue);
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    .btn-logout {
+      background: rgba(255, 42, 95, 0.1);
+      border: 1px solid rgba(255, 42, 95, 0.35);
+      color: #ff6b8f;
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-logout:hover {
+      background: rgba(255, 42, 95, 0.2);
+      border-color: #ff2a5f;
+    }
+
+    /* Mod Options */
+    .mods-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 26px;
+    }
+
+    .mod-btn {
+      width: 100%;
+      background: rgba(6, 12, 22, 0.9);
+      border: 1px solid rgba(0, 229, 255, 0.22);
+      border-radius: 14px;
+      padding: 15px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      color: var(--text-main);
+      text-align: left;
+    }
+
+    .mod-btn:hover {
+      border-color: rgba(0, 229, 255, 0.55);
+      background: rgba(0, 229, 255, 0.05);
+    }
+
+    .mod-btn.active {
+      background: rgba(0, 229, 255, 0.14);
+      border-color: var(--neon-blue);
+      box-shadow: var(--neon-glow);
+    }
+
+    .mod-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mod-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(0, 229, 255, 0.08);
+      border: 1px solid rgba(0, 229, 255, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--neon-blue);
+      transition: 0.25s;
+    }
+
+    .mod-btn.active .mod-icon {
+      background: var(--neon-blue);
+      color: #02060d;
+      box-shadow: 0 0 12px var(--neon-blue);
+    }
+
+    .mod-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+    }
+
+    .mod-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .toggle-pill {
+      width: 46px;
+      height: 24px;
+      border-radius: 50px;
+      background: #101c30;
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      position: relative;
+      transition: 0.25s;
+      flex-shrink: 0;
+    }
+
+    .toggle-pill::after {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #5b769c;
+      transition: 0.25s;
+    }
+
+    .mod-btn.active .toggle-pill {
+      background: rgba(0, 229, 255, 0.25);
+      border-color: var(--neon-blue);
+    }
+
+    .mod-btn.active .toggle-pill::after {
+      transform: translateX(20px);
+      background: var(--neon-blue);
+      box-shadow: 0 0 10px var(--neon-blue);
+    }
+
+    /* Connection Code Section */
+    .connection-section {
+      background: rgba(4, 9, 18, 0.85);
+      border: 1px solid rgba(0, 229, 255, 0.25);
+      border-radius: 16px;
+      padding: 20px 18px;
+    }
+
+    .section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--neon-blue);
+      text-align: center;
+      margin-bottom: 6px;
+      text-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+    }
+
+    .section-hint {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    .code-input {
+      width: 100%;
+      background: #020408;
+      border: 1px solid rgba(0, 229, 255, 0.35);
+      border-radius: 12px;
+      padding: 14px;
+      color: var(--neon-blue);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 8px;
+      text-align: center;
+      outline: none;
+      margin-bottom: 14px;
+      transition: 0.25s;
+    }
+
+    .code-input::placeholder {
+      font-size: 0.95rem;
+      letter-spacing: 3px;
+      color: #364966;
+    }
+
+    .code-input:focus {
+      border-color: var(--neon-blue);
+      box-shadow: var(--neon-glow);
+    }
+
+    .demo-footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 0.74rem;
+      color: #4f6685;
+      letter-spacing: 0.5px;
+    }
+
+    @media (max-width: 380px) {
+      .title { font-size: 1.5rem; }
+      .container { padding: 24px 16px; }
+      .code-input { font-size: 1.2rem; letter-spacing: 6px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TELA 1: LOGIN -->
+  <main class="container" id="login-screen">
+    <div class="header">
+      <h1 class="title">FUZZY PROXY</h1>
+      <div class="subtitle">MOD MENU</div>
+      <div class="status-badge">
+        <span class="status-dot"></span>
+        SISTEMA ONLINE • v2.6
+      </div>
+    </div>
+
+    <form id="login-form" novalidate>
+      <div class="input-group">
+        <label class="input-label" for="password-input">Chave de Acesso</label>
+        <div class="input-wrapper">
+          <input
+            type="password"
+            id="password-input"
+            placeholder="Digite a senha de acesso..."
+            autocomplete="off"
+          />
+          <button type="button" class="toggle-pass" id="toggle-pass-btn" title="Mostrar/Ocultar senha">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+          <polyline points="10 17 15 12 10 7"></polyline>
+          <line x1="15" y1="12" x2="3" y2="12"></line>
+        </svg>
+        ENTRAR
+      </button>
+
+      <a href="https://alpharede.com/WawN0Tjh7j7" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" id="get-key-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
+        </svg>
+        GET KEY
+      </a>
+
+      <div id="login-msg" class="msg-box"></div>
+    </form>
+
+    <div class="demo-footer">
+      PAINEL VIA WI-FI
+    </div>
+  </main>
+
+  <!-- TELA 2: PAINEL PRINCIPAL -->
+  <section class="container hidden" id="dashboard-screen">
+    <div class="header" style="margin-bottom: 18px;">
+      <h1 class="title" style="font-size: 1.55rem;">FUZZY PROXY</h1>
+      <div class="subtitle">MOD MENU</div>
+    </div>
+
+    <div class="panel-topbar">
+      <div class="active-counter">MÓDULOS ATIVOS: <span id="active-count">0</span>/3</div>
+      <button type="button" class="btn-logout" id="logout-btn">SAIR</button>
+    </div>
+
+    <!-- OPÇÕES DO MOD MENU -->
+    <div class="mods-list">
+      <button type="button" class="mod-btn" data-mod="AIM BOT">
+        <div class="mod-info">
+          <div class="mod-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="22" y1="12" x2="18" y2="12"></line>
+              <line x1="6" y1="12" x2="2" y2="12"></line>
+              <line x1="12" y1="6" x2="12" y2="2"></line>
+              <line x1="12" y1="22" x2="12" y2="18"></line>
+            </svg>
+          </div>
+          <div>
+            <div class="mod-title">AIM BOT</div>
+            <div class="mod-desc">Assistência visual demonstrativa</div>
+          </div>
+        </div>
+        <div class="toggle-pill"></div>
+      </button>
+
+      <button type="button" class="mod-btn" data-mod="ESP">
+        <div class="mod-info">
+          <div class="mod-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </div>
+          <div>
+            <div class="mod-title">ESP</div>
+            <div class="mod-desc">Radar e marcação de interface</div>
+          </div>
+        </div>
+        <div class="toggle-pill"></div>
+      </button>
+
+      <button type="button" class="mod-btn" data-mod="INTERRUPÇÃO POR WIFI">
+        <div class="mod-info">
+          <div class="mod-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+              <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+              <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+              <line x1="12" y1="20" x2="12.01" y2="20"></line>
+            </svg>
+          </div>
+          <div>
+            <div class="mod-title">INTERRUPÇÃO POR WIFI</div>
+            <div class="mod-desc">Simulação de latência na UI</div>
+          </div>
+        </div>
+        <div class="toggle-pill"></div>
+      </button>
+    </div>
+
+    <!-- ABA DE CÓDIGO DE CONEXÃO -->
+    <div class="connection-section">
+      <h2 class="section-title">CÓDIGO DE CONEXÃO</h2>
+      <p class="section-hint">Digite manualmente os 6 números de vinculação</p>
+
+      <input
+        type="text"
+        id="connection-code"
+        class="code-input"
+        inputmode="numeric"
+        maxlength="6"
+        placeholder="000000"
+        autocomplete="off"
+      />
+
+      <button type="button" class="btn btn-primary" id="connect-btn" style="margin-bottom: 0;">
+        CONECTAR
+      </button>
+
+      <div id="connect-msg" class="msg-box"></div>
+    </div>
+
+    <div class="demo-footer">
+      MODO DEMONSTRATIVO • NENHUMA REDE OU JOGO É ALTERADO
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      const VALID_KEY = "FUZZY-PROXY-AIM99";
+
+      const loginScreen = document.getElementById("login-screen");
+      const dashboardScreen = document.getElementById("dashboard-screen");
+      const loginForm = document.getElementById("login-form");
+      const passwordInput = document.getElementById("password-input");
+      const togglePassBtn = document.getElementById("toggle-pass-btn");
+      const loginMsg = document.getElementById("login-msg");
+      const logoutBtn = document.getElementById("logout-btn");
+
+      const modButtons = document.querySelectorAll(".mod-btn");
+      const activeCountEl = document.getElementById("active-count");
+
+      const codeInput = document.getElementById("connection-code");
+      const connectBtn = document.getElementById("connect-btn");
+      const connectMsg = document.getElementById("connect-msg");
+
+      // Alternar visualização da senha
+      togglePassBtn.addEventListener("click", () => {
+        const isPassword = passwordInput.type === "password";
+        passwordInput.type = isPassword ? "text" : "password";
+      });
+
+      // Validação de Login
+      loginForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const enteredKey = passwordInput.value.trim();
+
+        if (enteredKey === VALID_KEY) {
+          loginMsg.className = "msg-box";
+          loginMsg.textContent = "";
+          loginScreen.classList.add("hidden");
+          dashboardScreen.classList.remove("hidden");
+        } else {
+          loginMsg.textContent = "SENHA INVÁLIDA! Clique em GET KEY para obter sua chave.";
+          loginMsg.className = "msg-box msg-error";
+          loginScreen.classList.remove("shake");
+          void loginScreen.offsetWidth;
+          loginScreen.classList.add("shake");
+        }
+      });
+
+      // Sair do Painel
+      logoutBtn.addEventListener("click", () => {
+        passwordInput.value = "";
+        codeInput.value = "";
+        connectMsg.className = "msg-box";
+        connectMsg.textContent = "";
+        modButtons.forEach((btn) => btn.classList.remove("active"));
+        updateActiveCount();
+        dashboardScreen.classList.add("hidden");
+        loginScreen.classList.remove("hidden");
+      });
+
+      // Seleção dos módulos (AIM BOT, ESP, INTERRUPÇÃO POR WIFI)
+      function updateActiveCount() {
+        const activeTotal = document.querySelectorAll(".mod-btn.active").length;
+        activeCountEl.textContent = activeTotal;
+      }
+
+      modButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          btn.classList.toggle("active");
+          updateActiveCount();
+        });
+      });
+
+      // Campo de Código de Conexão: apenas números, máximo 6 dígitos, sem auto-geração
+      codeInput.addEventListener("input", () => {
+        codeInput.value = codeInput.value.replace(/\D/g, "").slice(0, 6);
+        if (connectMsg.classList.contains("msg-error")) {
+          connectMsg.className = "msg-box";
+          connectMsg.textContent = "";
+        }
+      });
+
+      // Botão CONECTAR
+      connectBtn.addEventListener("click", () => {
+        const code = codeInput.value;
+
+        if (!/^\d{6}$/.test(code)) {
+          connectMsg.textContent = "ERRO: Digite exatamente 6 números antes de conectar.";
+          connectMsg.className = "msg-box msg-error";
+          codeInput.focus();
+          return;
+        }
+
+        const activeMods = Array.from(document.querySelectorAll(".mod-btn.active"))
+          .map((btn) => btn.dataset.mod);
+
+        const modsText = activeMods.length > 0
+          ? `Módulos ativos: ${activeMods.join(", ")}.`
+          : "Nenhum módulo selecionado.";
+
+        connectMsg.textContent = `CONEXÃO CONFIRMADA COM O CÓDIGO #${code}! ${modsText}`;
+        connectMsg.className = "msg-box msg-success";
+      });
+    })();
+  </script>
+</body>
+</html>
